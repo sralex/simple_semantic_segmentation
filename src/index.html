@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SSS</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="reset.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div class="fixed-menu">
+            <div class="container-fixed-menu">
+                <button disabled="" id="btn_export" onclick="export_json()"  style="">Export</button>
+                <input  type="file" id="import" style="display:none;">
+                <button disabled="" id="btn_import" onclick="import_json()"  style="">Import</button>
+                ||
+                Mode: 
+                <button disabled="" id="btn_normal" onclick="normal_mode()" style="">Normal</button> |
+                <button disabled="" id="btn_drag" onclick="drag_mode()" style="">Drag</button> |
+                <button disabled="" id="btn_edit" onclick="edit_mode()" style="">Edit</button> |
+                Class:
+                <select disabled="" onchange="change_mask()" id="mask" >
+                    <option value="rgba(255,0,0,0.5)" >One</option>
+                    <option value="rgba(0,255,0,0.5)" >Two</option>
+                </select>
+                <button disabled="" id="btn_mask" onclick="add_mask()" style="">Add Mask</button>
+                <button disabled="" id="btn_cancel" onclick="cancel_polygon()" style="">Cancel</button>
+                ||
+                <button disabled="" id="btn_undo" onclick="undo()" style="">Undo</button>
+                <button disabled="" id="btn_redo" onclick="redo()" style="">Redo</button>
+                ||
+                <button disabled="" id="btn_delete_nodes" onclick="delete_selected_nodes()" style="">Delete Nodes</button>
+                <button disabled="" id="btn_delete_mask" onclick="delete_selected_shape()" style="">Delete Mask</button>
+                ||
+                <button disabled="" id="btn_delete_all" onclick="remove_all()" style="">Delete all</button>
+                || Selected: <div style="display: inline-block;text-align: center;" id="selected_shape"></div>
+                || 
+            </div>
+        </div>
+        <div >
+            <canvas id="main_canvas" onmousedown="onMouseDown(event)" oncontextmenu="return false;" onmouseup="onMouseUp(event)" onmousemove="onMouseMove(event)">
+                Your browser does not support the HTML5 canvas tag.
+            </canvas>
+            <div id="drop_zone">
+                <div class="drop_zone">Arrastre el archivo aquí o Haga clic para subir</div>
+                <input type="file" id="selectfile" style="display:none;">
+            </div>
+        </div>
+        <script type="text/javascript" src="state_machine.js"></script>
+        <script type="text/javascript" src="scripts.js"></script>
+        <script type="text/javascript">
+        var fileobj = null;
+
+        function handleClick(evt) {
+            evt.stopPropagation();
+            document.getElementById('selectfile').click();
+        }
+
+        function handleFileSelect(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            fileobj = evt.dataTransfer.files[0];
+            console.log(fileobj);
+            init(window.URL.createObjectURL(fileobj))
+            dropZone.style.display = "none";
+          }
+        document.getElementById('selectfile').onchange = function() {
+            fileobj = document.getElementById('selectfile').files[0];
+            init(window.URL.createObjectURL(fileobj))
+            dropZone.style.display = "none";
+        };
+
+        function handleDragOver(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy';
+        }
+
+        var dropZone = document.getElementById('drop_zone');
+        dropZone.addEventListener('dragover', handleDragOver, false);
+        dropZone.addEventListener('drop', handleFileSelect, false);
+        dropZone.addEventListener('click', handleClick, false);
+        </script>
+    </body>
+</html>
